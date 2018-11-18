@@ -28,6 +28,22 @@ View::composer(['admin::tree.create_modal', 'admin::tree.content'], function (Vi
     $templates = config('builder.'.$view->treeName.'.templates');
     $model = config('builder.'.$view->treeName.'.model');
     $idNode = request('node', 1);
+    //$html = '';
+
+    $defaultDefinition = config('builder.'.$view->treeName.'.default_definition');
+
+    /*if ($defaultDefinition) {
+        $jarboeController = new \Vis\Builder\JarboeController([
+            'url'      => URL::current(),
+            'def_name' => $view->treeName.'.'.$defaultDefinition,
+            'additional' => [
+                'current' => $idNode,
+            ],
+        ]);
+
+        $html = $jarboeController->view->showEditForm(false,true);
+    }*/
+
 
     if ($idNode && $model) {
         $info = $model::find($idNode);
@@ -43,7 +59,7 @@ View::composer(['admin::tree.create_modal', 'admin::tree.content'], function (Vi
         }
     }
 
-    $view->with('templates', $templates);
+    $view->with('templates', $templates)->with('defaultDefinition', $defaultDefinition);
 });
 
 View::composer(['admin::tree.partials.update',

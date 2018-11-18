@@ -87,6 +87,9 @@ class TreeCatalogController
             case 'get_edit_modal_form':
                 return $this->getEditModalForm();
 
+            case 'get_create_modal_form':
+                return $this->getCreateModalForm();
+
             default:
                 return $this->handleShowCatalog();
         }
@@ -349,6 +352,7 @@ class TreeCatalogController
     public function getEditModalForm()
     {
         $idNode = request('id');
+
         $current = $this->model::find($idNode);
 
         $templates = config('builder.'.$this->nameTree.'.templates');
@@ -368,6 +372,29 @@ class TreeCatalogController
         ]);
 
         $html = $jarboeController->view->showEditForm($idNode, true);
+
+        return Response::json([
+            'status' => true,
+            'html' => $html,
+        ]);
+    }
+
+    public function getCreateModalForm()
+    {
+        $idNode = request('id');
+
+        $defaultDefinition = config('builder.'.$this->nameTree.'.default_definition');
+
+        $jarboeController = new JarboeController([
+            'url'      => URL::current(),
+            'def_name' => $this->nameTree.'.'.$defaultDefinition,
+            'additional' => [
+                'node'    => $idNode,
+                //'current' => $idNode,
+            ],
+        ]);
+
+        $html = $jarboeController->view->showEditForm(false, true);
 
         return Response::json([
             'status' => true,

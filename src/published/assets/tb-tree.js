@@ -313,6 +313,45 @@ var Tree =
             });
         }, // end showEditForm
 
+        showCreateDefaultForm: function(id)
+        {
+            TableBuilder.showPreloader();
+
+            jQuery.ajax({
+                url: window.location.href,
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                data: { id: id , query_type: 'get_create_modal_form' },
+                success: function(response) {
+                    if (response.status) {
+
+                        jQuery(TableBuilder.form_wrapper).html(response.html);
+
+                        TableBuilder.initFroalaEditor();
+                        jQuery(TableBuilder.form).modal('show').css("top", $(window).scrollTop());;
+                        jQuery(TableBuilder.form).find('input[data-mask]').each(function() {
+                            var $input = jQuery(this);
+                            $input.mask($input.attr('data-mask'));
+                        });
+                        TableBuilder.handleActionSelect();
+
+                        $( ".modal-dialog" ).draggable({ handle: ".modal-header" });
+                    } else {
+                        TableBuilder.showErrorNotification(phrase['Что-то пошло не так, попробуйте позже']);
+                    }
+
+                    TableBuilder.hidePreloader();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var errorResult = jQuery.parseJSON(xhr.responseText);
+
+                    TableBuilder.showErrorNotification(errorResult.message);
+                    TableBuilder.hidePreloader();
+                }
+            });
+        }, // end showEditForm
+
         doEdit: function(id, table)
         {
             var form = '#edit_form_' + table;

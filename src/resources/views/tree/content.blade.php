@@ -1,4 +1,3 @@
-
 <div class="tb-tree-content-inner">
     <div class="smart-form">
     <table class="table table-bordered">
@@ -18,9 +17,16 @@
                     <th style="width: 60px">{{__cms('Активный')}}</th>
                 @endif
 
-                <th style="width: 80px">
-                    <a href="javascript:void(0);" onclick="Tree.showCreateForm('{{$current->id}}');" style="min-width: 70px;" class="btn btn-success btn-sm">{{__cms('Добавить')}}</a>
-                </th>
+                @if($defaultDefinition)
+                    <th style="width: 80px">
+                        <a href="javascript:void(0);" onclick="Tree.showCreateDefaultForm('{{$current->id}}');" style="min-width: 70px;" class="btn btn-success btn-sm">{{__cms('Добавить')}}</a>
+                    </th>
+                @else
+                    <th style="width: 80px">
+                        <a href="javascript:void(0);" onclick="Tree.showCreateForm('{{$current->id}}');" style="min-width: 70px;" class="btn btn-success btn-sm">{{__cms('Добавить')}}</a>
+                    </th>
+                @endif
+
             </tr>
         </thead>
         <tbody class="ui-sortable">
@@ -78,9 +84,11 @@
             $('.tpl-editable').editable2({
                 url: window.location.href,
                 source: [
-                @foreach ($templates as $capt => $tpl)
-                    { value: '{{$capt}}', text: '{{isset($tpl['title']) ? $tpl['title'] : $capt}}' },
-                @endforeach
+                @if($templates)
+                    @foreach ($templates as $capt => $tpl)
+                        { value: '{{$capt}}', text: '{{isset($tpl['title']) ? $tpl['title'] : $capt}}' },
+                    @endforeach
+                @endif
                 ],
                 display: function(value, response) {
                     return false;   //disable this method
