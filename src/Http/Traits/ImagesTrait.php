@@ -35,6 +35,11 @@ trait ImagesTrait
     {
         $picture = $this->picture;
 
+        if (isset($options['image_title']) && $options['image_title']) {
+            $name = $options['image_title'];
+            $picture = $this->$name;
+        }
+
         if ($lang) {
             $picture = $this->t('picture');
         }
